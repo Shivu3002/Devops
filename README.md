@@ -195,8 +195,8 @@ grep amazon → Filters only those lines that contain the word "amazon"
 awk '{print $2}' → Prints the 2nd column, which is the PID (Process ID)
 
 12:when ever we use pipe we shoul use below command for best practice and for failures
-set -e	Exit on any command failure [“Exit the script immediately if any command fails (non-zero exit code).”
-set -o pipefail	Exit if any command in a pipeline fails [“If any command in a pipeline fails, the entire pipeline fails.”]
+set -e	:Exit on any command failure [“Exit the script immediately if any command fails (non-zero exit code).”
+set -o pipefail : pipefail	Exit if any command in a pipeline fails [“If any command in a pipeline fails, the entire pipeline fails.”]
 Fail fast on any error (set -e)
 Accurately catch pipeline failures (set -o pipefail)
 
