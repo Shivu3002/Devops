@@ -573,5 +573,70 @@ Script cleanup on exit	trap 'rm /tmp/file' EXIT
 Catch command failure	trap 'echo Error occurred' ERR
 Multiple signals	trap 'echo Exiting...' SIGINT SIGTERM
 
+Hard link: A directory entry that directly references the same inode (data) as the original file. Multiple hard links are equivalent—they all point to the same content 
+Soft link (symlink): A small special file that stores the path to the target file or directory. It references the name, not the inode .
+
+Logrotate:
+🧠 What is Logrotate?
+A tool that automatically renames, compresses, archives, or deletes log files when they grow too big or old—helping manage disk usage and maintain readability 
+
+.
+
+🗂️ Configuration Files
+Global config: /etc/logrotate.conf — sets default behaviors like rotation frequency (daily/weekly/monthly), number of retained logs (rotate), compression, and includes the /etc/logrotate.d/ directory 
 
 
+
+🔧 Key Directives
+daily, weekly, monthly, yearly: schedule for rotation .
+size, minsize, maxsize: trigger rotation based on file size 
+compress, delaycompress: gzip old logs immediately or after the next rotation 
+missingok, notifempty: skip errors if log missing or empty 
+copytruncate: copy and truncate the log—useful when logs can’t be closed on rotation .
+postrotate / prerotate: scripts run before or after rotation (e.g., restarting services) 
+sharedscripts: ensures scripts run only once per group of logs 
+
+📅 Scheduling Logrotate
+On most distros, logrotate runs daily via cron (e.g., /etc/cron.daily/logrotate)
+For more frequent intervals, such as hourly, you must manually schedule via cron jobs under /etc/cron.hourly/ .
+🧪 Example: Custom Application Logs
+Create a config in /etc/logrotate.d/myapp:
+/var/log/myapp/*.log {
+    daily
+    size 50M
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 myuser mygroup
+    sharedscripts
+    postrotate
+        systemctl reload myapp
+    endscript
+}
+Rotates when either daily or size > 50 MB
+Keeps 7 backups, compressed after one cycle
+New logs owned by myuser:mygroup
+Reloads your app after rotation
+
+🛠️ Testing & Debugging
+Dry-run: logrotate -d /etc/logrotate.conf
+
+Verbose output: logrotate -v /etc/logrotate.conf
+
+Force rotation: logrotate -f /etc/logrotate.d/myapp 
+.
+
+✅ Why Use Logrotate?
+Prevents logs from filling up disks and degrading performance
+Organizes logs into manageable, dated archives
+Allows custom actions (compression, service reloads, alerts) 
+
+
+🧾 Summary
+Edit /etc/logrotate.conf or add a file to /etc/logrotate.d/
+Use directives to define when/how logs rotate
+Ensure cron runs logrotate at required frequency
+Test with -d, -v, or -f
+Monitor /var/lib/logrotate/status for history
