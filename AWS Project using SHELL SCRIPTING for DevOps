@@ -1,1 +1,53 @@
 
+AWS Project using SHELL SCRIPTING for DevOps 
+-------------------------------------------------
+Write a script to report the usage of aws in your project
+
+
+#!/bin/bash
+
+#####################################################
+#Author:Shiva
+#Date:01-07-2025
+#Version 1
+#
+#This script will report the resource usage
+#####################################################
+#AWS S3
+#AWS EC2
+#AWS LAMBDA
+#AWS IAM
+
+set -x
+#list s3 buckets
+aws s3 ls
+
+#List ec2 instance
+aws ec2 describe-instances | jq '.Reservations[].Instances[].InstanceId'
+
+#list aws lambda
+aws lambda list-functions
+
+#List iam users
+aws iam list-users
+
+ubuntu@ip-172-31-35-82:~$ aws configure
+AWS Access Key ID [****************ENG2]: 
+AWS Secret Access Key [****************ythb]: 
+Default region name [us-east]: us-east-1
+Default output format [json]: json
+ubuntu@ip-172-31-35-82:~$ ./aws_tracker.sh
++ aws s3 ls
+2025-07-01 15:28:07 shiva3002
++ aws ec2 describe-instances
++ jq '.Reservations[].Instances[].InstanceId'
++ aws lambda list-functions
+{
+    "Functions": []
+}
++ aws iam list-users
+{
+    "Users": []
+}
+
+
